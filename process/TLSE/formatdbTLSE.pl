@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright or © or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
+# Copyright or ï¿½ or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
 # mail David.Allouche@toulouse.inra.fr,Hugues.Leroy@irisa.fr,christophe.caron@jouy.inra.fr
 #
 # BioMaJ Software is a workflows motor engin dedicated to biological bank managenemt.
@@ -72,7 +72,7 @@ This program is distributed under the CeCILL License. (http://www.cecill.info)
 
 B<--dbname (-d) myBank>
 
-	BioMaJ bank name 
+	BioMaJ bank name
 	default = $ENV{dbname}
 
 B<--fastahome (-F)>
@@ -83,7 +83,7 @@ B<--fasta (-f) 'regexp1[ regexp2[ regexp3]]'>
 
 	Expression reguliere perl pour selectionner les fichiers a formater
 	La premiere expression correspond aux fichiers de la premiere bank ect... ...
-	Un groupe de regexp peut contenir plusieurs regexp separes par une virgule et 
+	Un groupe de regexp peut contenir plusieurs regexp separes par une virgule et
 	chaque groupe d'expresions doivent etre separes par des espaces.
 	Ex : --file '*.aa,*.a *.nt'. Tous les fichier *.aa et *.a constituront la bank 'bank_prot' (cf:--bank)
 	Si il y a plus d'expressions que de nom de banques, chaque fichier fasta donnera une banque blast du meme nom.
@@ -115,13 +115,13 @@ B<--execute (-e) system>
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque system, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)
 	default = sh
 
-B<--test (-t)> 
+B<--test (-t)>
 
 	Execution d'un test pour verifier le bon formatage des banques blast.
 	VERSION 0.9 --> NON OPERATIONNEL
@@ -141,8 +141,8 @@ B<--help (-h)>
 
  Ce script fait appel a la librairie Perl 'ProcessBiomajLib.pm'.
  Cette librairie et formatdbTLSE.pl doivent etre presents dans le repertoire des Process de BioMaJ :
- ($BIOMAJ_ROOT/conf/process/).
- 
+ ($BIOMAJ_ROOT/process/).
+
  Pour les appels aux commandes systeme, le fichier 'unix_command_system.cfg' doit etre renseigne,
  notament pour l'acces aux commandes 'formatdb' et 'fastacmd'.
 
@@ -163,7 +163,7 @@ B<--help (-h)>
 =head2 Execution
 
  Il y a 2 modes d'execution .
- 
+
  1 - mode par defaut, sur la machine locale (--execute sh).
  2 - en batch sur un cluster via une soumission a un systeme de queue. (--execute nomDuSystem) ex : pbs ou sge
  L execution reste sequentielle mais delocalisee.
@@ -173,7 +173,7 @@ B<--help (-h)>
 
  BLASTDB
 	Repertoire ou les fichiers alias blast seront crees.
-	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb 
+	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb
 	(data.dir = propriete de BioMaJ - voir global.properties ou myBank.properties.)
 
  Verification de l'environnement
@@ -232,7 +232,7 @@ B<--help (-h)>
 
 use strict;
 use Getopt::Long;
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process/.");
+use lib ("$ENV{BIOMAJ_ROOT}/process/.");
 use ProcessBiomajLib;
 
 my $VERSION = "0.9";
@@ -269,7 +269,7 @@ my $HELP;
 my $BANK_BLAST = "";
 my $INPUT_FILE_REGEXP = ".*";
 my $NO_PARSE;
-# chemin par default des fasta 
+# chemin par default des fasta
 # par default rien n est fait
 
 my $FastaHome="flat";
@@ -288,7 +288,7 @@ my $result = GetOptions ("dbname=s"     => \$DB_NAME,
 
 MAIN:
 {
-	&usage() if ($HELP);	
+	&usage() if ($HELP);
 	&initGlobalVar();
 
 	# Creation du repertoire des index et chdir dedans
@@ -298,38 +298,38 @@ MAIN:
 		&Info("Create repertory : $PATH_BLAST_DIR") if ($VERBOSE);
 	}
 	chdir "$PATH_BLAST_DIR";
-	
+
 	if ( !-e $PATH_LOG_DIR )
 	{
 		mkdir "$PATH_LOG_DIR";
 		&Info("Create repertory : $PATH_LOG_DIR") if ($VERBOSE);
 	}
-	
+
 	my $rh_list_fasta_file = &getFastaFile();
-	
+
 	foreach my $fasta_list_nb ( keys %{$rh_list_fasta_file})
 	{
 		foreach my $fasta_file ( split /,/,$rh_list_fasta_file->{$fasta_list_nb} )
 		{
 			&Info("File : $fasta_file");
-	
+
 			#Pour chaque fichier correspondant a l'expression reguliere
 			my $bool_prot_seq  = &checkSequenceType("$PATH_FLAT_DIR/$fasta_file");
-			
+
 			my $bank = &computeFastaFile($fasta_file,$bool_prot_seq);
  			if ( $TEST && !&test($bank) )
  			{
  				&Error("Error test de la banque >$bank< !!! ");
  				exit(-1);
  			}
-		
+
 			my $bank_name = ( defined($A_BANK[$fasta_list_nb]) ) ? $A_BANK[$fasta_list_nb] : "";
 			&buildHashAliasFile($bank,$bool_prot_seq,$bank_name);
 		}
 	}
-	
+
 	&createAliasFile;
-	
+
 	# On place un lien symbolique fasta sur le repertoire flat
 	# A PASSER SOUS LE CONTROLE D'UNE OPTION
 	&createLinkFastaDir;
@@ -344,7 +344,7 @@ MAIN:
 	Usage        : getFastaFile()
 	Prerequisite : none
 	Fonction     : Liste tous les fichiers des sous repertoire des rawdata (/flat)
-	             : Pour chaque fichier, determine s'il correpond a une regexp 
+	             : Pour chaque fichier, determine s'il correpond a une regexp
 	Returns      : ref sur hash (key=numero de la regexp, value=liste des fichiers correspondant separes par ,)
 	Args         : none
 	Globals      : @A_LIST_DIR = liste des repertoire des rawdata (/flat)
@@ -356,9 +356,9 @@ sub getFastaFile()
 {
 	my @a_list_fasta_file = ();
 	my %h_list_fasta_file = ();
-	
+
 	push (@A_LIST_DIR,$PATH_FLAT_DIR);
-	
+
 	while ( $#A_LIST_DIR != -1 )
 	{
 		&readDir( shift(@A_LIST_DIR) );
@@ -367,9 +367,9 @@ sub getFastaFile()
 	foreach my $file ( @A_LIST_FILE )
 	{
 		$file =~ s/$PATH_FLAT_DIR//;
-		
+
 		$file=~ s/^\/// if ( $file =~ /^\//);
-		
+
 		&selectFastaFile(\%h_list_fasta_file,$file);
 	}
 
@@ -392,7 +392,7 @@ sub getFastaFile()
 sub selectFastaFile
 {
 	my ($rh_list_file,$file) = (shift,shift);
-	
+
 	for( my $i=0 ; $i<=$#A_REGEXP ; $i++)
 	{
 		my @a_regexp = split /,/, $A_REGEXP[$i];
@@ -403,7 +403,7 @@ sub selectFastaFile
 				$rh_list_file->{$i} .= "$file,";
 			}
 		}
-	}	
+	}
 }
 
 =head3 procedure readDir
@@ -422,12 +422,12 @@ sub readDir()
 {
 	my $dir = shift;
 	my $list_file;
-	
+
 	opendir(REP,$dir);
 	while ( my $file = readdir(REP) )
 	{
 		next if ( $file =~ /^\.+$/);
-		
+
 		if ( -d("$dir/$file") )
 		{
 			push(@A_LIST_DIR,"$dir/$file");
@@ -456,7 +456,7 @@ sub readDir()
 sub computeFastaFile()
 {
 	my ($file,$bool_prot_seq) = (shift,shift);
-	
+
 	&clearOutputFiles();
 	&Info("Indexed file : $file") if ( $VERBOSE );
 
@@ -484,18 +484,18 @@ sub computeFastaFile()
 	             : en analysant les lettres des sequences sur les 100 premieres lignes
 	Returns      : $bool_prot_seq : 1 pour prot, 0 si nucleique
 	Args         : $file : chemin complet du fichier a tester
-	Globals      : 
+	Globals      :
 
 =cut
 sub checkSequenceType()
 {
 	my $file = shift;
-	
+
 	# Recupere le nom des fichiers (avec .gz, sans .gz, s'il est compresse)
 	my ($file_compress,$file_uncompress,$bool_compress) = &getNameCompressFile($file);
-	
+
 	my $file = ($bool_compress) ? $file_compress : $file_uncompress;
-	
+
 	return &ProcessBiomajLib::getSequenceType($file,$bool_compress);
 }
 
@@ -518,21 +518,21 @@ sub checkSequenceType()
 sub indexFastaFile()
 {
 	my ($file,$bool_prot_seq) = (shift,shift);
-	
+
 	# Recupere le nom des fichiers (avec .gz, sans .gz, s'il est compresse)
 	my ($file_compress,$file_uncompress,$bool_compress) = &getNameCompressFile($file);
 	my ($protein_option,$mask_move_index)  = &getOptionSeq($bool_prot_seq);
 	my @a_path = split /\//, $file_uncompress;
-	my $outfile = $a_path[$#a_path]; 
-	
+	my $outfile = $a_path[$#a_path];
+
 	my @a_cmd = ();
-	
+
 	chdir($PATH_BLAST_DIR);
 	my $parse_option = ($NO_PARSE) ? "F" : "T";
-    
+
 	push(@a_cmd,"$FORMATDB -o $parse_option -p $protein_option -i $PATH_FLAT_DIR/$file_uncompress -l $PATH_LOG_DIR/$file_uncompress.log");
 	push(@a_cmd,"$H_CMD{UNIX_MV} -f $PATH_FLAT_DIR/$file_uncompress$mask_move_index $PATH_BLAST_DIR");
-	
+
 	if ($bool_compress)
     {
     	# Soit il est decompresse, indexe puis recompresse
@@ -548,7 +548,7 @@ sub indexFastaFile()
 			push(@a_cmd,"$H_CMD{UNIX_GUNZIP} -c $PATH_FLAT_DIR/$file_compress | $FORMATDB -i stdin -n $PATH_BLAST_DIR/$outfile -o $parse_option -p $protein_option -l $PATH_LOG_DIR/$outfile.log");
     	}
     }
-	
+
 	&ProcessBiomajLib::executeBatch(\@a_cmd,$BATCH_SYSTEM,$outfile);
 	return $outfile;
 }
@@ -558,7 +558,7 @@ sub indexFastaFile()
 	Title        : getNameCompressFile
 	Usage        : getNameCompressFile($file)
 	Prerequisite : none
-	Fonction     : A partir du nom du fichier fasta de la release, determine s'il est gzippe et retourne le nom du fichier zippe, non zippe 
+	Fonction     : A partir du nom du fichier fasta de la release, determine s'il est gzippe et retourne le nom du fichier zippe, non zippe
 	Returns      : $file_compress : nom du fichier gzippe
 	             : $file_uncompress : nom du fichier non zippe
 	             : $bool_compress : 1 si le fichier $file est gzippe sinon 0
@@ -569,16 +569,16 @@ sub indexFastaFile()
 sub getNameCompressFile()
 {
 	my $file_compress = shift;
-	
+
 	my $file_uncompress = $file_compress;
 	my $bool_compress = 0;
-    
+
 	if ( $file_compress =~ /\.gz$/ )
    	{
 		$file_uncompress =~ s/\.gz//;
 		$bool_compress = 1;
     	}
-    
+
     	return ($file_compress,$file_uncompress,$bool_compress);
 }
 
@@ -599,8 +599,8 @@ sub getOptionSeq()
 	my $bool_prot_seq = shift;
 	my $protein_option = ($bool_prot_seq) ? "T" : "F";
 	my $mask_move_index = ($bool_prot_seq) ? "\.p*" : "\.n*";
-	
-	return($protein_option,$mask_move_index); 
+
+	return($protein_option,$mask_move_index);
 }
 =head2 procedure buildHashAliasFile
 
@@ -620,17 +620,17 @@ sub buildHashAliasFile()
 {
 	my ($fasta_file,$bool_prot_seq,$bank_name) = (shift,shift,shift);
 	$bank_name = "" if ( !defined($bank_name) );
-	
-	
+
+
 	# On recupere le nom du fichier fasta compresse, le nom du fichier decompresse et un bool si le fichier est compresse ou pas
 	# Si le fichier n'est pas compresse, $file_compress = $file_uncompress
 	my ($file_compress,$file_uncompress,$bool_compress) = &getNameCompressFile($fasta_file);
 	my $extension  = &getAliasFileExtension($bool_prot_seq);
-	
+
 	# Selon si $BANK_BLAST est renseigne, la banque blast prendra le nom du fichier fasta indexe ou $BANK_BLAST
 	my $title_bank = ($bank_name eq "") ? "$file_uncompress" : "$bank_name";
 	my $file_alias = ($bank_name eq "") ? "$PATH_BLASTDB_DIR/$file_uncompress"."$extension" : "$PATH_BLASTDB_DIR/$bank_name"."$extension";
-	
+
 	$H_ALIAS_FILE{$file_alias}{TITLE}   = "$title_bank ".&ProcessBiomajLib::getRemoteRelease();
 	$H_ALIAS_FILE{$file_alias}{DBLIST} .= "$PATH_BLAST_DIR/$file_uncompress ";
 	return;
@@ -645,7 +645,7 @@ sub buildHashAliasFile()
 	Returns      : none
 	Args         : $bank : nom de la banque
 	             : $bool_prot_seq : 1 pour prot, sinon 0
-	Globals      : 
+	Globals      :
 
 =cut
 sub createAliasFile()
@@ -661,11 +661,11 @@ print ALIAS <<END
 TITLE $H_ALIAS_FILE{$file_alias}{TITLE}
 #
 DBLIST $H_ALIAS_FILE{$file_alias}{DBLIST}
-	
+
 END
 ;
 		close(ALIAS);
-	
+
 		&Info("Create alias file : $file_alias") if ($VERBOSE);
 	}
 
@@ -687,7 +687,7 @@ sub getAliasFileExtension()
 {
 	my $bool_prot_seq = shift;
 	my $extension = ($bool_prot_seq) ? ".pal" : ".nal";
-	
+
 	return $extension;
 }
 
@@ -707,7 +707,7 @@ sub getAliasFileExtension()
 sub createLinkFastaDir
 {
 	my $cmd = "";
-	
+
 	$cmd = "$H_CMD{UNIX_LN} -s $PATH_FLAT_DIR $PATH_FASTA_DIR";
 	`$cmd` if ( !-e($PATH_FASTA_DIR) );
 	return;
@@ -728,14 +728,14 @@ sub test()
 {
 	my $bank = shift;
 
-#############################	
+#############################
 # REVOIR LA FONCTION DE TEST
 ####
 	return 1;
 #############################
-	
+
 	my ($fastabank,$nb_seq,$nb_letter) = ("","","");
-		
+
 	my $cmd = "$FASTACMD -d $bank -I";
 	open (FASTACMD,"$cmd |");
 	while (my $line = <FASTACMD>)
@@ -756,10 +756,10 @@ sub test()
 		}
 	}
 	close(FASTACMD);
-	
+
 	&Info("Bank --> $fastabank");
 	&Info("$nb_seq sequences -- $nb_letter letters");
-	
+
 	my $rvl = ( $fastabank eq "") ? 0 : 1;
 	return $rvl;
 }
@@ -772,17 +772,17 @@ sub test()
 	Fonction     : Recupere les valeurs du fichier tmp/bank.var et controle la validite des arguments
 	Returns      : none
 	Args         : none
-	Globals      : 
+	Globals      :
 
 =cut
 sub initGlobalVar()
 {
 	&ProcessBiomajLib::checkBiomajEnvironment();
 	&ProcessBiomajLib::readCfgFile(\%H_CMD);
-	
+
 	### Variable spe a la banque ###
 	$DB_NAME = $ENV{'dbname'} if ( $DB_NAME eq "" );
-	
+
 # modif david pour permettre le formatage de fichier or du repertoire flat
 	if(  $FastaHome eq ("null")) {
 	$PATH_FLAT_DIR      = &ProcessBiomajLib::getPathFuturReleaseFlatDir();
@@ -791,27 +791,27 @@ sub initGlobalVar()
         $PATH_FLAT_DIR = &ProcessBiomajLib::getPathFuturReleaseMyDir($FastaHome);
 	print " fastahome sub dir =".$FastaHome.". ";
 	print " absolut path for fasta is =".$PATH_FLAT_DIR;
-	
+
 	}
 
 	$PATH_LOG_DIR       = &ProcessBiomajLib::getPathFuturReleaseLogDir();
 	$PATH_BLAST_DIR     = &ProcessBiomajLib::getPathFuturReleaseMyDir($INDEX_DIR);
 	$PATH_FASTA_DIR     = &ProcessBiomajLib::getPathFuturReleaseMyDir($FASTA_DIR);
 	$PATH_BLASTDB_DIR   = &ProcessBiomajLib::getPathBlastDbDir();
-	
+
 	&Error("No such flat directory for $DB_NAME $PATH_FLAT_DIR bank.") if ( !-e($PATH_FLAT_DIR) );
 	&Warning("option -file : default value [.*]") if ($INPUT_FILE_REGEXP eq ".*");
-		
+
 	$FORMATDB = $H_CMD{FORMATDB} if ( defined($H_CMD{FORMATDB}) );
 	$FASTACMD = $H_CMD{FASTACMD} if ( defined($H_CMD{FASTACMD}) );
-	
+
 	### Variable du programme ###
-	&Usage("nonvalid option : --uncompress $UNCOMPRESS") if ( $UNCOMPRESS !~ /(T|F)/ );	
+	&Usage("nonvalid option : --uncompress $UNCOMPRESS") if ( $UNCOMPRESS !~ /(T|F)/ );
 	$UNCOMPRESS = ( $UNCOMPRESS =~ /T/i ) ? 1 : 0;
-	
+
 	@A_BANK = split /\s+/, $BANK_BLAST;
 	@A_REGEXP = split /\s+/, $INPUT_FILE_REGEXP;
-			
+
 	return;
 }
 
@@ -828,11 +828,11 @@ sub initGlobalVar()
 =cut
 sub usage()
 {
-	
+
 	my $message = shift;
-	
+
 	&Error("$message") if ( defined($message) && $message ne "" );
-	
+
 print STDOUT <<END
 
 formatdbTLSE.pl  -  version $VERSION
@@ -840,8 +840,8 @@ formatdbTLSE.pl  -  version $VERSION
 formatdbTLSE.pl [--dbname myBank] [--fasta regex1,[regexp2],...] [--bank bankName1,[bankName2],...]
                 [--no_parse_seqid] [--uncompress T/F] [--execute sh/pbs/sge/other] [--test] [--verbose] [--help]
 
-Arguments : 
-        
+Arguments :
+
 	--dbname     (-d) : bank name (BioMaJ) [defaut : $ENV{dbname}]
 	--fastahome  (-F) :  In fasta base dir ( default value = flat )
 	--fasta      (-f) : regexp file [.*]
@@ -850,22 +850,22 @@ Arguments :
 	--uncompress (-u) : T/F         [F]
 	--execute    (-e) : exec mode [default : 'sh']
 	--test       (-t) : execute test after indexing (not functional in 0.9)
-	--verbose    (-v) : 
+	--verbose    (-v) :
 	--help       (-h) : This message
-        
+
 
 --dbname (-d) myBank
 
-	BioMaJ bank name 
+	BioMaJ bank name
 		default = \$ENV{dbname}
 --fastahome  (-F)
-	 directory ou se trouve les fichiers fasta à formater
+	 directory ou se trouve les fichiers fasta ï¿½ formater
 
 --fasta (-f) 'regexp1[ regexp2[ regexp3]]'
 
 	Expression reguliere perl pour selectionner les fichiers a formater
 	La premiere expression correspond aux fichiers de la premiere bank ect... ...
-	Un groupe de regexp peut contenir plusieurs regexp separes par une virgule et 
+	Un groupe de regexp peut contenir plusieurs regexp separes par une virgule et
 	chaque groupe d'expresions doivent etre separes par des espaces.
 	Ex : --file '*.aa,*.a *.nt'. Tous les fichier *.aa et *.a constituront la bank 'bank_prot' (cf:--bank)
 	Si il y a plus d'expressions que de nom de banques, chaque fichier fasta donnera une banque blast du meme nom.
@@ -897,7 +897,7 @@ Arguments :
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque system, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)

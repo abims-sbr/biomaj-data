@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright or © or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
+# Copyright or ï¿½ or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
 # mail David.Allouche@toulouse.inra.fr,Hugues.Leroy@irisa.fr,christophe.caron@jouy.inra.fr
 #
 # Biomaj Software is a workflows motor engin dedicated to biological bank managenemt.
@@ -83,7 +83,7 @@ This program is distributed under the CeCILL License. (http://www.cecill.info)
 
 B<--dbname (-d) bankname>
 
-	SRS bank name 
+	SRS bank name
 		default = \$ENV{dbname}
 
 B<--logdir (-l) 'logDirectory'>
@@ -101,7 +101,7 @@ B<--execute (-e) system>
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque system, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)
@@ -116,7 +116,7 @@ B<--cpu_number (-c)>
 
 	Specify the CPU number or node number
 		default:$CPU_OPTION
-		
+
 B<--force (f)>
 
 	Force l'indexation
@@ -137,13 +137,13 @@ B<--help (-h)>
 
  Ce script fait appel a la librairie Perl 'ProcessBiomajLib.pm'.
  Cette librairie et formatdbTLSE.pl doivent etre presents dans le repertoire des Process de BioMaJ :
- ($BIOMAJ_ROOT/conf/process/).
- 
+ ($BIOMAJ_ROOT/process/).
+
  Pour les appels aux commandes systeme, le fichier 'unix_command_system.cfg' doit etre renseigne,
  notament pour l'acces aux commandes 'formatdb' et 'fastacmd'.
- 
+
  Ce script ne comprend pas l'installation de SRS. Il faut que celle-ci soit correctement realisee.
- Il est fait appel aux commande 'srsscheck' pour constituer un fichier makefile pour indexer la banque et a 
+ Il est fait appel aux commande 'srsscheck' pour constituer un fichier makefile pour indexer la banque et a
  'make' pour executer ce makefile.
 
 =head2 Repertoire de sortie
@@ -154,7 +154,7 @@ B<--help (-h)>
 =head2 Execution
 
  Il y a 2 modes d'execution .
- 
+
  1 - mode par defaut, sur la machine locale (--execute sh).
  2 - en batch sur un cluster via une soumission a un systeme de queue. (--execute nomDuSystem) ex : pbs ou sge
  L execution reste sequentielle mais delocalisee.
@@ -164,7 +164,7 @@ B<--help (-h)>
 
  SRSROOT
 	Repertoire ou les fichiers alias blast seront crees.
-	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb 
+	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb
 	(data.dir = propriete de BioMaJ - voir global.properties ou myBank.properties.)
 
  Verification de l'environnement
@@ -180,7 +180,7 @@ B<--help (-h)>
 use strict;
 #use vars qw/ %opt /;
 use Getopt::Long;
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process/.");
+use lib ("$ENV{BIOMAJ_ROOT}/process/.");
 use ProcessBiomajLib;
 
 ############################################################################
@@ -209,8 +209,8 @@ my $PATH_MAKEFILE_DIR="$SRSROOT/pbs/makefile/"; # Path of srscheck makefile gene
 my $SRS_OPTIONS="-nomove -links";      # SrsCheck default options
 my $SRSCHECK_OPTIONS;
 
-my $LOCK="$ENV{SRSFLAGS}/BiomajSRSLock";       # Flag name to lock only one indexing 
-my $CPUNUMBER=4;                               # Specify the number of default CPU used to indexing 
+my $LOCK="$ENV{SRSFLAGS}/BiomajSRSLock";       # Flag name to lock only one indexing
+my $CPUNUMBER=4;                               # Specify the number of default CPU used to indexing
 my $SLEEPTIME=5;                               # Time in hours to wait for the lock, if 0 no wait.
 
 ##### SRS Commands #####
@@ -248,11 +248,11 @@ MAIN:
 	foreach my $bank (@A_BANKS)
 	{
 		&clearOutputFiles();
-	
-		&setLogFile($bank); 
+
+		&setLogFile($bank);
 		&setMakefile($bank);
 		&computeBank($bank);
-		
+
 	}
 
 	&cleanEnvSrsForBiomaj();
@@ -275,7 +275,7 @@ MAIN:
 
 =cut
 sub computeBank {
-	
+
 	my $bank = shift;
 
 	if (&isNecessaryIndexing($bank))
@@ -284,20 +284,20 @@ sub computeBank {
 		if (!$ONLY_CHECK)
 		{
 			&srsdo($bank);
-			
-			if (&isCorrectIndexing($bank)) 
+
+			if (&isCorrectIndexing($bank))
 			{
 	   			&ProcessBiomajLib::Info("SRS indexing finished and seems correct.");
 				&getOutputFiles($bank);
 				&ProcessBiomajLib::printOutputFiles();
-	 		} 
-			else 
+	 		}
+			else
 			{
-	    		&ProcessBiomajLib::Error("SRS indexing error.");  
+	    		&ProcessBiomajLib::Error("SRS indexing error.");
 	 		}
 		}
 	}
-	else 
+	else
 	{
 		&ProcessBiomajLib::Info("Nothing to do for $bank.");
 	}
@@ -323,8 +323,8 @@ sub  isNecessaryIndexing()
 	my $returnValue=`$SRSCHECK  -checkonly -l \"$bank\" $SRSCHECK_OPTIONS`;
 
 	if (($returnValue eq "") || ($returnValue =~ /needs to be moved online/))  {
-    	if ($returnValue =~ /needs to be moved online/) {     
-       		&ProcessBiomajLib::Info("Index files need to be moved to online.") if $VERBOSE;       
+    	if ($returnValue =~ /needs to be moved online/) {
+       		&ProcessBiomajLib::Info("Index files need to be moved to online.") if $VERBOSE;
     	}
 		return 0
   	} else {
@@ -348,12 +348,12 @@ sub isCorrectIndexing()
 {
 	my $bank = shift;
 
-	my $returnValue=`$GETZ -off -c \"$bank\"`;  
+	my $returnValue=`$GETZ -off -c \"$bank\"`;
 	if ($returnValue=~ /^[0-9]+$/) {
 		return $returnValue;
   	} else {
 		return 0;
-	} 
+	}
 }
 
 =head2 procedure srsdo
@@ -369,15 +369,15 @@ sub isCorrectIndexing()
 
 =cut
 sub srsdo()
-{	
+{
 	my $bank = shift;
 	&lockIndexing();
 
 	&ProcessBiomajLib::Info("Indexing running for $bank.") if $VERBOSE;
-	
+
 	my $cmd = "$SRSCHECK -l \"$bank\" -o $PATH_MAKEFILE_FILE $SRSCHECK_OPTIONS 1>$PATH_LOG_FILE";
 	&ProcessBiomajLib::executeCmdSystem($cmd);
-		
+
 	my @a_cmdFile = ( &getCmdFile($bank) );
 	executeBatch(\@a_cmdFile,$BATCH_SYSTEM,$bank,"srs");
 
@@ -404,9 +404,9 @@ sub getCmdFile
 {
 	my $bank = shift;
 	my $cmdFile = "run_srs_$bank.sh";
-	
-	open (RUNSRS,">$cmdFile") or &ProcessBiomajLib::Error("Cannot create file : $cmdFile");	
-	
+
+	open (RUNSRS,">$cmdFile") or &ProcessBiomajLib::Error("Cannot create file : $cmdFile");
+
 	if ( $USEPVM )
 	{
 		print RUNSRS &getCmdForPVM($bank);
@@ -416,12 +416,12 @@ sub getCmdFile
 		print RUNSRS "cd $ENV{SRSFLAGS}; $H_CMD{UNIX_MAKE} -j $CPUNUMBER -k -f $PATH_MAKEFILE_FILE all 1>>$PATH_LOG_FILE";
 	}
 	close(RUNSRS);
-	
+
 	system ("$H_CMD{UNIX_CHMOD} +x $cmdFile");
-	
+
 	my $path = `pwd`;
 	chomp($path);
-	
+
 	return "$path/$cmdFile";
 }
 
@@ -438,14 +438,14 @@ sub getCmdFile
 =cut
 sub getCmdForPVM
 {
-	my $cmd = "";	
+	my $cmd = "";
 
 	if ( $BATCH_SYSTEM eq "pbs" )
 	{
 
 	# 	$cmd .= "#PBS -A SRS\n";
 	# 	$cmd .= "#PBS -j oe\n";
-	# 	$cmd .= "#PBS -V\n";	 	
+	# 	$cmd .= "#PBS -V\n";
 	 	$cmd .= "#PBS -e \"localhost:$PATH_LOG_DIR\"\n";
 		$cmd .= "#PBS -l select=$CPUNUMBER:ncpus=2\n";
 	 	$cmd .= "#PBS -l place=scatter\n";
@@ -483,13 +483,13 @@ sub getCmdForPVM
 	             : $bank : nom de la banque (pour nommer le fichier a executer si utilisation de cluster. Peut etre vide)
 	             : $option : les options a utiliser. Vide pour les options par defaut(voir ci-dessous)
 	Globals      : none
-	
+
 	Definition des options pour l'utilisation du calcul distribue :
 	    L'executable et les options a utiliser pour le calcul distribue sont definis dans le fihier "unix_command_system.cfg".
-	    Exemple : 
+	    Exemple :
 	        - Executable pour PBS --> il faut definir une variable "EXECUTE_BATCH_CMD_PBS=/path/qsub"
 	        - Executable pour SGE --> il faut definir une variable "EXECUTE_BATCH_CMD_SGE=/path/qsub"
-	
+
 	        - Options par defaut pour PBS --> il faut definir une variable "EXECUTE_BATCH_OPTION_PBS=options par defaut"
 	        - Options par defaut pour SGE --> il faut definir une variable "EXECUTE_BATCH_OPTION_SGE=options par defaut"
 	        - Options particulieres pour PBS --> il faut definir une variable "EXECUTE_BATCH_OPTION_PBS_OPTIONNAME=options pour OPTIONNAME"
@@ -502,12 +502,12 @@ sub executeBatch
 	$system = "sh" if ( !defined($system) );
 	$option = ( !defined($option) ) ? "" :"_".uc($option);
 	$bank   = time if ( !defined($bank) );
-	
+
 	if ($system ne "" && $system ne "sh")
 	{
 		$system = uc($system);
 		&ProcessBiomajLib::Error("The command for --execute pbs is not defined in unix_command_system.cfg ( EXECUTE_BATCH_CMD_$system=? )!!\n") if ( !exists($H_CMD{"EXECUTE_BATCH_CMD_$system"}) );
-	
+
 		my $execute_cmd = $H_CMD{"EXECUTE_BATCH_CMD_$system"};
 		my $execute_option = ( exists($H_CMD{"EXECUTE_BATCH_OPTION_$system$option"}) ) ? $H_CMD{"EXECUTE_BATCH_OPTION_$system$option"} : "";
 
@@ -523,7 +523,7 @@ sub executeBatch
 		{
 			&ProcessBiomajLib::Info( "Execute : ".&executeCmdSystem($cmd,"$PATH_LOG_DIR/execute.cmd.$bank.log") );
 		}
-	}	
+	}
 
 	return;
 }
@@ -552,7 +552,7 @@ sub lockIndexing()
   		} else {
     		$sleeptime=$SLEEPTIME*3600; #Convert in seconds
     		$step=300; # 5 minutes  = 300 seconds
-    		$wait=0;    
+    		$wait=0;
     		while ($wait <= $sleeptime) {
       			sleep($step);
       			$wait=$wait+$step;
@@ -565,8 +565,8 @@ sub lockIndexing()
       			}
     		}
     		if ($wait >= $sleeptime) {
-       			&ProcessBiomajLib::Error("Lock exists, we have waited, but the lock file is never free. Lock file is $LOCK");    
-    		}    
+       			&ProcessBiomajLib::Error("Lock exists, we have waited, but the lock file is never free. Lock file is $LOCK");
+    		}
   		}
  	} else {
 		&ProcessBiomajLib::Info("Set lock. Lock file is $LOCK") if $VERBOSE;
@@ -587,7 +587,7 @@ sub lockIndexing()
 
 =cut
 sub unlock()
-{	
+{
 	unlink($LOCK);
 	&ProcessBiomajLib::Info("Removing lock file. Lock file is $LOCK") if $VERBOSE;
 }
@@ -608,7 +608,7 @@ sub cleanEnvSrsForBiomaj()
 	foreach my $dir (@A_UNLINK_DIR)
 	{
 		my $cmd = "$H_CMD{UNIX_RM} -rf $dir";
-		`$cmd`;		
+		`$cmd`;
 	}
 }
 
@@ -624,31 +624,31 @@ sub cleanEnvSrsForBiomaj()
 
 =cut
 sub init()
-{	
-	&getUsage() if $HELP; 
+{
+	&getUsage() if $HELP;
 	&__initGlobalVar();
-   
-   	&ProcessBiomajLib::Info("Verbose mode ON.") if $VERBOSE; 
-   	&setForce() if $FORCE; 
+
+   	&ProcessBiomajLib::Info("Verbose mode ON.") if $VERBOSE;
+   	&setForce() if $FORCE;
 	&setBank();
    	&setCpu() if $CPU_OPTION;
-	
+
 	&__initEnvSrsForBiomaj();
-	
+
 	return;
 }
 
 sub __initGlobalVar()
-{	
+{
 	&ProcessBiomajLib::checkBiomajEnvironment();
 	&ProcessBiomajLib::readCfgFile(\%H_CMD);
-	
+
 	&ProcessBiomajLib::Error("SRSROOT is not defined !!") if ( $SRSROOT eq "" );
 	&ProcessBiomajLib::Error("No such or directory \$SRSROOT: $SRSROOT") if ( !-e($SRSROOT) );
-	
+
 	$DB_NAME = $ENV{'dbname'} if ( $DB_NAME eq "" );
 	&ProcessBiomajLib::Error("dbname is not define. You must define --dbname or environment variable 'dbname'") if ($DB_NAME eq "");
-	
+
 	$PATH_LOG_DIR = &ProcessBiomajLib::getPathFuturReleaseLogDir();
 	$PATH_SRS_DIR = &ProcessBiomajLib::getPathFuturReleaseMyDir($INDEX_DIR);
 	system("$H_CMD{UNIX_MKDIR} $PATH_LOG_DIR") if ( !-e($PATH_LOG_DIR) );
@@ -656,10 +656,10 @@ sub __initGlobalVar()
 
 #	&ProcessBiomajLib::Error ("--batch_system sh and --pvm : incompatible options") if ( $BATCH_SYSTEM eq "sh" & $USEPVM );
 	&ProcessBiomajLib::Error ("You must define --batch_system whith pbs|sge|other for used --pvm") if ( $USEPVM & $BATCH_SYSTEM !~ /(sge|pbs|other)/ );
-	
+
 	$BATCH_SYSTEM = "sh" if ( $BATCH_SYSTEM eq "" );
 	&ProcessBiomajLib::Error ("nonvalid option : --batch_system $BATCH_SYSTEM\nPossible value : sh,sge,pbs,other") if ( $BATCH_SYSTEM !~ /(sh|sge|pbs|other)/ );
-	
+
 	$PATH_MAKEFILE_DIR = $ENV{SRS_MAKEFILEDIR} if ( $ENV{SRS_MAKEFILEDIR} ne "");
 	$SRS_OPTIONS      = $ENV{SRS_OPTIONS}     if ( $ENV{SRS_OPTIONS}     ne "");
 	$SRSCHECK_OPTIONS = $SRS_OPTIONS;
@@ -676,13 +676,13 @@ sub __initEnvSrsForBiomaj()
 	my $srs_offline_dir       = "$dir_version/".&ProcessBiomajLib::getFuturReleaseLink();
 	my $srs_offline_data_dir  = "$srs_offline_dir/".&ProcessBiomajLib::getFlatDir();
 	my $srs_offline_index_dir = "$srs_offline_dir/$INDEX_DIR";
- 	
+
 	if ( !-e("$srs_online_dir") )
 	{
 		system("$H_CMD{UNIX_MKDIR} $srs_online_dir");
 		system("$H_CMD{UNIX_MKDIR} $srs_online_data_dir");
 		system("$H_CMD{UNIX_MKDIR} $srs_online_index_dir");
-		
+
 		push(@A_UNLINK_DIR,$srs_online_dir);
 		push(@A_UNLINK_DIR,$srs_online_data_dir);
 		push(@A_UNLINK_DIR,$srs_online_index_dir);
@@ -697,14 +697,14 @@ sub __initEnvSrsForBiomaj()
 		system("$H_CMD{UNIX_MKDIR} $srs_online_data_dir");
 		push(@A_UNLINK_DIR,$srs_online_data_dir);
 	}
-	
+
 	system("$H_CMD{UNIX_MKDIR} $srs_offline_index_dir") if ( !-e($srs_offline_index_dir) );
-	
+
 	&ProcessBiomajLib::Error("No such or directory : $srs_offline_data_dir")  if ( !-e($srs_offline_data_dir) );
 	&ProcessBiomajLib::Error("No such or directory : $srs_offline_index_dir") if ( !-e($srs_offline_index_dir) );
 	&ProcessBiomajLib::Error("No such or directory : $srs_online_data_dir")   if ( !-e($srs_online_data_dir) );
 	&ProcessBiomajLib::Error("No such or directory : $srs_online_index_dir")  if ( !-e($srs_online_index_dir) );
-	
+
 	$GETZ     = $H_CMD{GETZ}     if ( defined($H_CMD{GETZ}) );
 	$SRSCHECK = $H_CMD{SRSCHECK} if ( defined($H_CMD{SRSCHECK}) );
 }
@@ -731,7 +731,7 @@ sub setBank()
 	{
 		&ProcessBiomajLib::Error("--dbname and environment variable dbname are not specified !!");
 	}
-	
+
 	@A_BANKS = split /,/,$DB_NAME;
 }
 
@@ -746,7 +746,7 @@ sub setBank()
 	Globals      : $PATH_LOG_FILE et $PATH_LOG_DIR
 
 =cut
-sub setLogFile() 	
+sub setLogFile()
 {
 	my $bank = shift;
 
@@ -783,7 +783,7 @@ sub setMakefile($bank)
 
 =cut
 sub setCpu() {
-	&ProcessBiomajLib::Info("Force CPU number to $CPU_OPTION.") if $VERBOSE; 
+	&ProcessBiomajLib::Info("Force CPU number to $CPU_OPTION.") if $VERBOSE;
 	$CPUNUMBER=$CPU_OPTION;
 }
 
@@ -809,7 +809,7 @@ sub setForce()
 	Title        : getOutputFiles
 	Usage        : getOutputFiles()
 	Prerequisite : none
-	Fonction     : Extrait du repertoire des index SRS ($PATH_SRS_DIR), la liste des fichiers index 
+	Fonction     : Extrait du repertoire des index SRS ($PATH_SRS_DIR), la liste des fichiers index
 	               et fait appel a ProcessBiomajLib::outputFile() pour chaque fichier.
 	             : Place les droit 644 (rw-r--r--) sur chaque fichier.
 	Returns      : none
@@ -824,7 +824,7 @@ sub getOutputFiles()
 	{
 		next if ( $file =~ /^\.+$/ );
 		&ProcessBiomajLib::outputFile("$PATH_SRS_DIR/$file");
-	
+
 		chmod(0644,"$PATH_SRS_DIR/$file");
 	}
 	closedir(SRS_DIR);
@@ -844,17 +844,17 @@ indexSrsTLSE.pl [--dbname bankName] [--logdir logDirectory] [--only_check] [--ex
 
      --dbname     (d) bankname       : SRS bank name  [default:$ENV{dbname}]
      --logdir     (l) directory      : log directory
-     --only_check (o)                : Test if an indexing is necessary [default:off]    
+     --only_check (o)                : Test if an indexing is necessary [default:off]
      --execute    (e) execute_system : submit indexing on scheduler (sh|pbs|sge|other) [default:$BATCH_SYSTEM]
      --pvm        (p)                : Used pvm [default:off]
      --cpu_number (c) CpuNumber      : specify the CPU number or node number [default:$CPU_OPTION]
      --force      (f)                : force indexing [default:off]
      --help       (h)                : this (help) message
      --verbose    (v)                : verbose output [default:off]
-	
+
 --dbname (-d) bankname
 
-	SRS bank name 
+	SRS bank name
 		default = \$ENV{dbname}
 
 --logdir (-l) 'logDirectory'
@@ -872,7 +872,7 @@ indexSrsTLSE.pl [--dbname bankName] [--logdir logDirectory] [--only_check] [--ex
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque system, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)
@@ -887,7 +887,7 @@ indexSrsTLSE.pl [--dbname bankName] [--logdir logDirectory] [--only_check] [--ex
 
 	Specify the CPU number or node number
 		default:$CPU_OPTION
-		
+
 --force (f)
 
 	Force l'indexation
@@ -895,10 +895,9 @@ indexSrsTLSE.pl [--dbname bankName] [--logdir logDirectory] [--only_check] [--ex
 
 --verbose (-v)
 
---help (-h)	
+--help (-h)
 
-"; 
- 
+";
+
 exit 1;
 }
-

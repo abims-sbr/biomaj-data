@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# Copyright or © or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
+# Copyright or ï¿½ or Copr. Allouche D., Assi A., Beausse Y., Caron C., Filangi O., Larre J-M., Leroy H., Martin V.
 # mail David.Allouche@toulouse.inra.fr,Hugues.Leroy@irisa.fr,christophe.caron@jouy.inra.fr
 #
 # BioMaJ Software is a workflows motor engin dedicated to biological bank managenemt.
@@ -42,7 +42,7 @@ fastacmdTLSE.pl - Generation de fichiers fasta a partir d'index blast
 
 =head1 SYNOPSIS
 
-fastacmdTLSE.pl [--dbname myBank] [--bank bankName1,[bankName2],...] [--fasta fastaFile1,[fastaFile2],...] 
+fastacmdTLSE.pl [--dbname myBank] [--bank bankName1,[bankName2],...] [--fasta fastaFile1,[fastaFile2],...]
                 [--compress T/F] [--execute system] [--test] [--verbose] [--help]
 
 =head1 Description
@@ -75,7 +75,7 @@ This program is distributed under the CeCILL License. (http://www.cecill.info)
 
 B<--dbname (-d) myBank>
 
-	BioMaJ bank name 
+	BioMaJ bank name
 	default = $ENV{dbname}
 
 B<--bank (-b) 'bankName1[ bankName2[ bankName3]]'>
@@ -91,8 +91,8 @@ B<--fasta (-f) 'fastaFile1[ fastaFile2[ fastaFile3]]'>
 	Nom des fichiers fasta pour chaque banque de --bank
 	Le premier fichier correspond a la premiere bank ect...
 	Si --fasta n'est pas renseigne, le nom du fichier fasta sera le meme que le nom de la banque.
-	Si --bank pocede 3 valeurs, --fasta doit comporter 3 noms de fichier ou aucun 
-	(dans le cas ou on veut donner le meme nom au fichier fasta qu'aux banques) 
+	Si --bank pocede 3 valeurs, --fasta doit comporter 3 noms de fichier ou aucun
+	(dans le cas ou on veut donner le meme nom au fichier fasta qu'aux banques)
 		default = '--bank'
 
 B<--compress (-c) T/F>
@@ -106,13 +106,13 @@ B<--execute (-e) system>
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque systeme, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)
 	default = sh
 
-B<--test (-t)> 
+B<--test (-t)>
 
 	Execution d'un test pour verifier la coherence du fichier fasta obtenu.
 	VERSION 0.9 --> NON OPERATIONNEL
@@ -132,8 +132,8 @@ B<--help (-h)>
 
  Ce script fait appel a la librairie Perl 'ProcessBiomajLib.pm'.
  Cette librairie et fastacmdTLSE.pl doivent etre presents dans le repertoire des Process de BioMaJ :
- ($BIOMAJ_ROOT/conf/process/).
- 
+ ($BIOMAJ_ROOT/process/).
+
  Pour les appels aux commandes systeme, le fichier 'unix_command_system.cfg' doit etre renseigne,
  notament pour l'acces aux commandes 'fastacmd' et 'formatdb'.
 
@@ -154,7 +154,7 @@ B<--help (-h)>
 =head2 Execution
 
  Il y a 2 modes d'execution .
- 
+
  1 - mode par defaut, sur la machine locale (--execute sh).
  2 - en batch sur un cluster via une soumission a un systeme de queue. (--execute nomDuSystem) ex : pbs, sge, ...
  L execution reste sequentielle mais delocalisee.
@@ -164,7 +164,7 @@ B<--help (-h)>
 
  BLASTDB
 	Repertoire ou les fichiers alias blast seront crees.
-	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb 
+	Si BLASTDB n'est pas renseignee, le repertoire par defaut sera 'data.dir'/blastdb
 	(data.dir = propriete de BioMaJ - voir global.properties ou myBank.properties.)
 
  Verification de l'environnement
@@ -177,7 +177,7 @@ B<--help (-h)>
 =head2 Exemples d'utilisation
 
 	La Banque BioMaJ se nomme : "est"
-	Exemple avec 3 banques blast dans le repertoire flat (est_human est_mouse est_other) et la banque qui regroupe les 3 autres : 
+	Exemple avec 3 banques blast dans le repertoire flat (est_human est_mouse est_other) et la banque qui regroupe les 3 autres :
 	est.nal
           est_human.nal       est_mouse.nal       est_otehr.nal
           est_human.00.nhr    est_mouse.00.nhr    est_other.00.nhr
@@ -193,10 +193,10 @@ B<--help (-h)>
 
 	2)  formatdbTLSE.pl --bank 'est_human est_mouse est_other'
 	2') formatdbTLSE.pl --bank 'est_human est_mouse est_other' --fasta 'est_human est_mouse est_other'
-		Il y aura création de 3 fichiers fasta : est_human.gz est_mouse.gz est_other.gz
+		Il y aura crï¿½ation de 3 fichiers fasta : est_human.gz est_mouse.gz est_other.gz
 
 	3 ) formatdbTLSE.pl --bank 'est_human est_mouse est_other' --fasta 'toto1 toto2 toto3'
-		Il y aura création de 3 fichiers fasta : toto1.gz(pour la banque est_human) toto2.gz(pour la banque est_mouse) toto3.gz(Pour la banque est_other)
+		Il y aura crï¿½ation de 3 fichiers fasta : toto1.gz(pour la banque est_human) toto2.gz(pour la banque est_mouse) toto3.gz(Pour la banque est_other)
 
 	4 ) formatdbTLSE.pl --bank 'est_human est_mouse est_other' --fasta 'toto1 toto2'
 		Ici, le programme sort sur erreur ( exit(-1) )
@@ -207,7 +207,7 @@ B<--help (-h)>
 
 use strict;
 use Getopt::Long;
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process/.");
+use lib ("$ENV{BIOMAJ_ROOT}/process/.");
 use ProcessBiomajLib;
 
 # Execute path var
@@ -238,7 +238,7 @@ my $INDEX_DIR = "blast";
 my $result = GetOptions ("dbname=s" => \$DB_NAME,
                          "bank=s"   => \$BANK_LIST,
                          "fasta=s"  => \$OUTPUT_FILE,
-                         "compress=s" => \$COMPRESS, #T/F 
+                         "compress=s" => \$COMPRESS, #T/F
                          "execute=s"  => \$BATCH_SYSTEM,
 						 "test"       => \$TEST,
 						 "verbose"    => \$VERBOSE,
@@ -248,33 +248,33 @@ my $result = GetOptions ("dbname=s" => \$DB_NAME,
 # MAIN
 MAIN:{
 
-	&usage() if ($HELP);	
+	&usage() if ($HELP);
 	&initGlobalVar;
-	
+
 	# Creation du repertoire fasta et chdir dedans
 	if ( !-e $PATH_FASTA_DIR )
 	{
 		mkdir "$PATH_FASTA_DIR";
 		&Info("mkdir $PATH_FASTA_DIR .");
-	} 
+	}
 	chdir "$PATH_FASTA_DIR";
 
 	# Recup le nombre des sous banques a traiter
 	my $cpt = $#A_BANK_LIST;
-	
+
 	# Pour chaqu'une de ces sous banques
 	for (my $i=0 ; $i<=$cpt ; $i++)
 	{
 		my $bank = $A_BANK_LIST[$i];
 		my $ofile = $A_OUTPUT_FILE[$i];
-		
+
 		&computeFastaFile($bank,$ofile);
 		&test() if ($TEST);
-		
+
 		my $bool_prot_seq  = &getSequenceType($ofile,$COMPRESS);
 		&createAliasFile($bank,$bool_prot_seq);
 	}
-	
+
 	# On place un lien symbolique blast sur le repertoire flat
 	&createLinkIndexDir;
 
@@ -298,7 +298,7 @@ MAIN:{
 sub computeFastaFile()
 {
 	my ($bank,$ofile) = (shift,shift);
-	
+
 	&clearOutputFiles();
 	&outputFile(&createFastaFile($bank,$ofile));
 	&printOutputFiles();
@@ -336,7 +336,7 @@ sub createFastaFile
 	}
 
 	&ProcessBiomajLib::executeBatch(\@a_cmd,$BATCH_SYSTEM,$bank);
-	
+
 	if ( !-e($product_file) || -z($product_file) )
 	{
 		&Error("Output file >$product_file< not exist or null !");
@@ -361,10 +361,10 @@ sub createFastaFile
 sub createAliasFile()
 {
 	my ($bank,$bool_prot_seq) = (shift,shift);
-	
+
 	my $extension  = &getAliasFileExtension($bool_prot_seq);
 	my $release = &ProcessBiomajLib::getRemoteRelease();
-	
+
 	my $file_alias = "$PATH_BLASTDB_DIR/$bank"."$extension";
 	open (ALIAS,">$file_alias");
 	print ALIAS <<END
@@ -372,7 +372,7 @@ sub createAliasFile()
 TITLE $bank $release
 #
 DBLIST $PATH_BLAST_DIR/$bank
-	
+
 END
 ;
 	close(ALIAS);
@@ -394,7 +394,7 @@ sub getAliasFileExtension()
 {
 	my $bool_prot_seq = shift;
 	my $extension = ($bool_prot_seq) ? ".pal" : ".nal";
-	
+
 	return $extension;
 }
 
@@ -412,7 +412,7 @@ sub getAliasFileExtension()
 sub createLinkIndexDir
 {
 	my $cmd = "";
-	
+
 	$cmd = "$H_CMD{UNIX_LN} -s $PATH_FLAT_DIR $PATH_BLAST_DIR";
 	`$cmd` if ( !-e($PATH_BLAST_DIR) );
 	return;
@@ -422,11 +422,11 @@ sub createLinkIndexDir
 
 	Title        : test
 	Usage        : test()
-	Prerequisite : 
-	Fonction     : 
+	Prerequisite :
+	Fonction     :
 	Returns      : $bool : 1 ou 0
-	Args         : 
-	Globals      : 
+	Args         :
+	Globals      :
 
 =cut
 sub test()
@@ -442,37 +442,37 @@ sub test()
 	Fonction     : Recupere les valeurs du fichier tmp/bank.var et controle la validite des arguments
 	Returns      : none
 	Args         : none
-	Globals      : 
+	Globals      :
 
 =cut
 sub initGlobalVar()
-{	
+{
 	&ProcessBiomajLib::checkBiomajEnvironment();
 	&ProcessBiomajLib::readCfgFile(\%H_CMD);
-	
+
 	### Variable specifique a la banque ###
 	$DB_NAME = $ENV{'dbname'} if ( $DB_NAME eq "" );
-	
+
 	$PATH_FLAT_DIR      = &ProcessBiomajLib::getPathFuturReleaseFlatDir();
 	$PATH_BLAST_DIR     = &ProcessBiomajLib::getPathFuturReleaseMyDir($INDEX_DIR);
 	$PATH_FASTA_DIR     = &ProcessBiomajLib::getPathFuturReleaseMyDir($FASTA_DIR);
-	
+
 	$PATH_BLASTDB_DIR   = &ProcessBiomajLib::getPathBlastDbDir();
-	
+
 	&Error("No such flat directory for $DB_NAME bank.") if ( !-e($PATH_FLAT_DIR) );
 
 	### Variable du programme ###
-	&Error("nonvalid option : --compress $COMPRESS") if ( $COMPRESS !~ /(T|F)/ );	
+	&Error("nonvalid option : --compress $COMPRESS") if ( $COMPRESS !~ /(T|F)/ );
 	$COMPRESS    = ( $COMPRESS =~ /T/i ) ? 1 : 0;
 	$BANK_LIST   = $DB_NAME   if ($BANK_LIST eq "");
 	$OUTPUT_FILE = $BANK_LIST if ($OUTPUT_FILE eq "");
-	
+
 	@A_BANK_LIST   = split /\s+/, $BANK_LIST;
 	@A_OUTPUT_FILE = split /\s+/, $OUTPUT_FILE;
-	
+
 	&usage("No bank of defines") if ( $#A_BANK_LIST == -1 );
 	&usage("There is not the same number of bank only of output files\nOption --bank_list and --output_file_list") if ($#A_BANK_LIST != $#A_OUTPUT_FILE);
-	
+
 	$FASTACMD = $H_CMD{FASTACMD} if ( defined($H_CMD{FASTACMD}) );
 
 	return;
@@ -491,18 +491,18 @@ sub initGlobalVar()
 =cut
 sub usage()
 {
-	
+
 	my $message = shift;
-	
+
 print STDERR "$message\n" if ( defined($message) && $message ne "" );
-	
+
 print STDOUT <<END
 
-fastacmdTLSE.pl [--dbname myBank] [--bank bankName1,[bankName2],...] [--fasta fastaFile1,[fastaFile2],...] 
+fastacmdTLSE.pl [--dbname myBank] [--bank bankName1,[bankName2],...] [--fasta fastaFile1,[fastaFile2],...]
                 [--compress T/F] [--execute system] [--test] [--verbose] [--help]
 
-Arguments : 
-	
+Arguments :
+
 	--dbname     (-d)       : bank name (BioMaJ) [deafault : $ENV{dbname}]
 	--bank       (-b)       : bank name (blast)  (without extension)
 	--fasta      (-f)       : output fasta file (same order that bank)
@@ -514,10 +514,10 @@ Arguments :
 
 --dbname (-d) myBank
 
-	BioMaJ bank name 
+	BioMaJ bank name
 	default = $ENV{dbname}
 
---bank (-b) 'bankName1[ bankName2[ bankName3]]' 
+--bank (-b) 'bankName1[ bankName2[ bankName3]]'
 
 	Liste des banques blast dont un fichier fasta doit etre genere.
 	Si l'option n'est pas renseignee, c'est --dbname qui sera utilise.
@@ -530,10 +530,10 @@ Arguments :
 	Nom des fichiers fasta pour chaque banque de --bank
 	Le premier fichier correspond a la premiere bank ect...
 	Si --fasta n'est pas renseigne, le nom du fichier fasta sera le meme que le nom de la banque.
-	Si --bank pocede 3 valeurs, --fasta doit comporter 3 noms de fichier ou aucun 
-	(dans le cas ou on veut donner le meme nom au fichier fasta qu'aux banques) 
+	Si --bank pocede 3 valeurs, --fasta doit comporter 3 noms de fichier ou aucun
+	(dans le cas ou on veut donner le meme nom au fichier fasta qu'aux banques)
 		default = '--bank'
-                
+
 --compress (-c) T/F
 
 	Compression via gzip du fichier fasta.
@@ -545,7 +545,7 @@ Arguments :
 	ou etre transcrite dans un fichier pour une execution via un systeme de queue.
 	Voir ProcessBiomajLib::executeBatch() pour une utilisation sur votre systeme.
 	On doit preciser pour chaque systeme, la commande systeme a utiliser et les options via le fichier unix_command_system.cfg
-	Ex pour --execute pbs : 
+	Ex pour --execute pbs :
 	 EXECUTE_BATCH_CMD_PBS=/usr/pbs/bin/qsub
 	 EXECUTE_BATCH_OPTIONS_PBS=-q longq
 	Par defaut, les commandes sont executees via un appel systeme classique (--execute sh)
