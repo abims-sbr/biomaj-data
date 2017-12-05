@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 
@@ -33,7 +33,7 @@ GetOptions (
 #standard qualifiers
 	    'biomaj'	       =>\$h_job_args{biomaj},
 	    'databank=s'       =>\$h_job_args{databank},
-#optional qualifiers	    	    
+#optional qualifiers
 	    'execute=s'        =>\$h_job_args{batch_system},
 #other qualifiers
 	    'debug'            =>\$debug,
@@ -75,7 +75,7 @@ GetOptions (
 #pose un lock ou attend la fin du lock avant de commencer afin d'eviter de crasher le SRS en cours
      &srs_lock();
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern) if( defined $h_job_args{source_pattern} );
  }
 
@@ -85,7 +85,7 @@ GetOptions (
      $h_job_args{argv} = \@t_task_args;
      $h_job_args{remote_command} = $h_job_args{binary_path}.'/'. $h_job_args{srscheck};
      $h_job_args{job_name} = $h_job_args{databank}.'.'.$h_job_args{index_name};
-     
+
      push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
      &info('');
      &MigaleBiomaj::drmaa_synchronization( \@t_jobid_session ) if( $h_job_args{batch_system} eq 'drmaa' );
@@ -131,7 +131,7 @@ Standard qualifiers:
   -databank       Databank name in srsdb.i. [string]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
 Optional qualifiers:
@@ -145,7 +145,7 @@ Other qualifiers:
   -version        Display program version. [boolean]
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -189,7 +189,7 @@ Standard qualifiers:
   -databank       Databank name in srsdb.i. [string]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
 =head1 OPTIONS
@@ -263,4 +263,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 
@@ -70,7 +70,7 @@ ENVIRONMENT: {
 	&info('Load : StandAlone Environment.');
 	&MigaleBiomaj::standalone_environment( \%h_job_args );
     }
-   
+
 #probleme donc sortie en usage()
     else {
 	 &usage();
@@ -83,7 +83,7 @@ ENVIRONMENT: {
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern);
 }
 
@@ -101,12 +101,12 @@ ENVIRONMENT: {
  MAIN: {
      my ( $index_file, $source_file );
      my ( @t_jobid_session, @t_task_args );
-     
+
      while( ($index_file, $source_file) = each(%h_pattern) ) {
 	 &debug('Variable>%h_pattern : '.$index_file.' = '.$source_file) if($debug);
-	 
+
 	 @t_task_args = ( @t_job_args, '-outfile', $index_file, '-infile', $h_job_args{source_dir} . $source_file );
-	 
+
 	 $h_job_args{argv} = \@t_task_args;
 	 $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($index_file);
 
@@ -129,15 +129,15 @@ Standard qualifiers:
                   <logical_dbname>=<filename>,[<logical_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 Optional qualifiers:
   -execute        Execution mode. [local|drmaa|debug]
                   default = in migale_biomaj.cfg
@@ -161,7 +161,7 @@ Formatdb+ qualifiers:
                   default = true
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -206,15 +206,15 @@ Standard qualifiers:
                   <logical_dbname>=<filename>,[<logical_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 =head1 OPTIONS
 
 Optional qualifiers:
@@ -311,4 +311,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

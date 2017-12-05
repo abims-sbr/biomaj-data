@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 use Date::Format;
@@ -28,7 +28,7 @@ $h_job_args{biomaj} = 0;
 my $VERSION = '0.5';
 
 &MigaleBiomaj::read_config( \%h_job_args, 'gcg' );
-     
+
 GetOptions (
 #standard qualifiers
 	    'outinput=s'         =>\$h_job_args{source_pattern},
@@ -38,7 +38,7 @@ GetOptions (
 	    'outdir=s'           =>\$h_job_args{index_dir},
 #biomaj qualifiers
 	    'biomaj'             =>\$h_job_args{biomaj},
-#optional qualifiers	    
+#optional qualifiers
 	    'execute=s'          =>\$h_job_args{batch_system},
 	    'inname=s'           =>\$h_job_args{source_name},
 	    'outname=s'          =>\$h_job_args{index_name},
@@ -83,14 +83,14 @@ GetOptions (
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern) if( defined $h_job_args{source_pattern} );
  }
 
 #gestion de la banque prosite
  PROSITE:{
      last if( $h_job_args{databank} !~ m/prosite/i);
-     
+
      @t_task_args = ( $h_job_args{source_dir}.'prosite.doc', $h_job_args{source_dir}.'prosite.dat' );
      @t_task_args = ( @t_task_args, '-release', $h_job_args{release} ) if( defined $h_job_args{release} );
      @t_task_args = ( @t_task_args, '-directory', $h_job_args{index_dir}, '-quiet', '-default' );
@@ -117,7 +117,7 @@ GetOptions (
      &error('outinput requiered') if( &is_null($h_job_args{source_pattern}) );
 
      my ( $logical, $files );
-     
+
      while( ($logical, $files) = each(%h_pattern) ) {
 	 &debug('Variable>%h_pattern : '.$logical.' = '.$files) if($debug);
 
@@ -146,15 +146,15 @@ Standard qualifiers:
                   <logical_dbname>=<filename>,[<logical_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 Optional qualifiers:
   -execute        Execution mode. [local|drmaa|debug]
                   default = in migale_biomaj.cfg
@@ -176,7 +176,7 @@ Dataset+ qualifiers:
                   default = 1.0
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -221,15 +221,15 @@ Standard qualifiers:
                   <logical_dbname>=<filename>,[<logical_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 =head1 OPTIONS
 
 Optional qualifiers:
@@ -328,4 +328,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

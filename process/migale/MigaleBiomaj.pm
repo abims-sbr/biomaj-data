@@ -25,7 +25,7 @@ require Exporter;
 @EXPORT = qw( is_null info warning error debug );
 
 #variables de la librairie
-my $CONFIG_FILE = "$ENV{BIOMAJ_ROOT}/conf/process/migale.cfg";
+my $CONFIG_FILE = "$ENV{BIOMAJ_ROOT}/process/migale.cfg";
 my ($OUTPUT_FILES,$OUTPUT_FILES_VOLATILE) = ("","");
 my %h_lib_config;
 my $debug;
@@ -131,7 +131,7 @@ sub biomaj_environment {
     $h_job_args = shift;
 
 #verification des variables d'environnement BioMaJ
-    &error("the environment variable 'dbname' is not set.")                 if ( !exists($ENV{'dbname'}) || $ENV{'dbname'} eq ""); 
+    &error("the environment variable 'dbname' is not set.")                 if ( !exists($ENV{'dbname'}) || $ENV{'dbname'} eq "");
     &error("the environment variable 'datadir' is not set.")                if ( !exists($ENV{'datadir'}) || $ENV{'datadir'} eq "");
     &error("the environment variable 'dirversion' is not set.")             if ( !exists($ENV{'dirversion'}) || $ENV{'dirversion'} eq "");
     &error("the environment variable 'remoterelease' is not set.")          if ( !exists($ENV{'remoterelease'}) || $ENV{'remoterelease'} eq "");
@@ -139,7 +139,7 @@ sub biomaj_environment {
     &error("the environment variable 'PP_DEPENDENCE_VOLATILE' is not set.") if ( !exists($ENV{'PP_DEPENDENCE_VOLATILE'}) || $ENV{PP_DEPENDENCE_VOLATILE} eq "");
     &error("the environment variable 'PP_WARNING' is not set.")             if ( !exists($ENV{'PP_WARNING'}) || $ENV{PP_WARNING} eq "");
 
-#initiation des paths    
+#initiation des paths
     $h_job_args->{future_release_path} = File::Spec->canonpath( "$ENV{datadir}/$ENV{dirversion}/$h_lib_config{future_release_link}" );
     $h_job_args->{release_path} = File::Spec->canonpath( "$ENV{datadir}/$ENV{dirversion}/$ENV{dbname}_$ENV{remoterelease}" );
     $h_job_args->{databank_path} = File::Spec->canonpath( "$ENV{datadir}/$ENV{dirversion}" );
@@ -150,7 +150,7 @@ sub biomaj_environment {
 
     $h_job_args->{date} = time2str('%y-%m-%d', time) if( !defined $h_job_args->{date} );
     $h_job_args->{log_dir} = File::Spec->canonpath( "$h_job_args->{log_path}/$h_job_args->{index_name}_$h_job_args->{date}" ).'/';
-    
+
     &debug('Dump de %h_job_args '.Dumper(%$h_job_args)) if( $debug );
 
     $h_job_args->{databank} = $ENV{'dbname'}       if( !defined $h_job_args->{databank} );
@@ -166,25 +166,25 @@ sub biomaj_environment {
 	Fonction     : Mise en place de l environnement du pocess en StandAlone.
 	Returns      : none
 	Args         : \%h_job_args : reference du hash contenant les informations sur le process.
-	Env          : 
+	Env          :
 
 =cut
 
 sub standalone_environment {
     &error('[MigaleBiomaj.pm] standalone_environment : one arguments requiered') if( scalar(@_) < 1 );
-    
+
     my ( $h_job_args );
 
     $h_job_args = shift;
     $ENV{'PP_WARNING'} = ' ';
-    
+
     &error('indir path requiered')   if( &is_null($h_job_args->{source_dir}) );
     &error('outdir path requiered')  if( &is_null($h_job_args->{index_dir}) );
-    
+
     $h_job_args->{index_dir} =  File::Spec->rel2abs( $h_job_args->{index_dir} ).'/' if( !defined $h_job_args->{index_dir} );
     $h_job_args->{source_dir} =  File::Spec->rel2abs( $h_job_args->{source_dir} ).'/';
     &error('Error - '.$h_job_args->{source_dir}.' don\'t exist') if( !(-d $h_job_args->{source_dir}) );
-    
+
     $h_job_args->{date} = time2str('%y-%m-%d', time) if( !defined $h_job_args->{date} );
     $h_job_args->{log_dir} = File::Spec->canonpath( "$h_job_args->{log_path}/$h_job_args->{index_name}_$h_job_args->{date}" ).'/';
 }
@@ -208,7 +208,7 @@ sub read_config {
 
     my ( $h_config, $o_cfg, $section );
     my ( %h_cfg );
-    
+
     $h_config = shift;
     $section = shift;
 
@@ -245,7 +245,7 @@ sub info {
     &error('[MigaleBiomaj.pm] info : one arguments requiered') if( scalar(@_) < 1 );
 
     my ( $msg );
-    
+
     $msg = shift;
     $msg = '' if( !defined $msg );
 
@@ -289,10 +289,10 @@ sub warning {
 
 sub error {
     my ( $msg );
-    
+
     $msg = shift;
     $msg = '' if( !defined $msg );
-    
+
     print STDERR "$msg\n";
     exit(-1);
 }
@@ -312,7 +312,7 @@ sub error {
 
 sub debug() {
     &error('[MigaleBiomaj.pm] debug : one arguments requiered') if( scalar(@_) < 1 );
-    
+
     my ($msg);
 
     $msg = shift;
@@ -330,7 +330,7 @@ sub debug() {
 	Fonction     : Vide les variables $OUTPUT_FILES et $OUTPUT_FILES_VOLATILE selon $tag
 	Returns      : none
 	Args         : $tag : ('all', 'dependence' ou 'volatile')
-	             : Selon la valeur utilisee, la (les) liste(s) correspondantes sera(ont) vidée(s)
+	             : Selon la valeur utilisee, la (les) liste(s) correspondantes sera(ont) vidï¿½e(s)
 	             : Defaut : 'all'
 	Globals      : $OUTPUT_FILES et $OUTPUT_FILES_VOLATILE
 
@@ -340,12 +340,12 @@ sub clear_output_files {
     &error('[MigaleBiomaj.pm] clear_output_files : one arguments requiered') if( scalar(@_) < 1 );
 
     my ( $tag );
-    
+
     $tag = shift;
     $tag = 'all' if( (!defined $tag) || ($tag eq '') );
-    
+
     &error("clearOutputFiles($tag) : $tag --> no valid option. ['','dependence','volatile','all']") if( $tag !~ m/(all|volatile|dependence)/ );
-    
+
     if( ($tag eq 'all') || ($tag eq 'volatile') ) {
 	$OUTPUT_FILES_VOLATILE = '';
     }
@@ -376,7 +376,7 @@ sub print_output_files {
 	    print STDOUT "$ENV{PP_DEPENDENCE}$ofile\n";
 	}
     }
-	
+
     if ( $OUTPUT_FILES_VOLATILE ne '' )	{
 	foreach $ofile (split /\s+/, $OUTPUT_FILES_VOLATILE) 	{
 	    print STDOUT "$ENV{PP_DEPENDENCE_VOLATILE}$ofile\n";
@@ -430,7 +430,7 @@ sub output_file() {
 	Title        : make_directory
 	Usage        : make_directory($directory)
 	Prerequisite : none
-	Fonction     : Creation d un répertoire avec un message d information.
+	Fonction     : Creation d un rï¿½pertoire avec un message d information.
 	Returns      : Chemin absolue du repertoire.
 	Args         : $directory : chemin du repertoire a creer.
 	Globals      : none
@@ -444,15 +444,15 @@ sub make_directory() {
 
     $directory = shift;
     $directory = File::Spec->rel2abs( $directory );
-    
+
     &error("$directory don't defined") if ( (!defined $directory) || ($directory eq '') );
-    
+
     if ( !-e $directory ) {
 	if ((mkdir $directory)) {
 	    &warning("mkdir $directory");
 	}
 	else {
-	    &error("$directory n'a pas pu etre créé : $!");
+	    &error("$directory n'a pas pu etre crï¿½ï¿½ : $!");
 	}
     }
     return $directory;
@@ -474,11 +474,11 @@ sub make_directory() {
 
 sub is_null() {
     &error('[MigaleBiomaj.pm] is_null : one arguments requiered') if( scalar(@_) < 1 );
-    
+
     my ( $variable );
 
     $variable = shift;
-    
+
     return 1 if( !(defined $variable) || ($variable eq '') );
     return 0;
 }
@@ -586,11 +586,11 @@ sub execution_factory() {
   SWITCH:for( $h_jobs->{batch_system} ) {
 
       /^local$/i && do {
-	  for( @{$h_jobs->{argv}} ) { 
+	  for( @{$h_jobs->{argv}} ) {
 	      $cmdline .= " $_" ;
 	  }
 	  &info( $h_jobs->{remote_command} . $cmdline );
-	  
+
 	  $job_return = system( $h_jobs->{remote_command} . $cmdline );
 	  die "Error - $h_jobs->{remote_command} returned non-zero exit code : $job_return \n $!" if( $job_return );
 
@@ -600,30 +600,30 @@ sub execution_factory() {
 
       /^drmaa$/i && do {
 	  $jt = &drmaa_job_template($h_jobs);
-	  
+
 	  &info('Run jobs '.$h_jobs->{'job_name'});
-	 
-	  for( @{$h_jobs->{argv}} ) { 
+
+	  for( @{$h_jobs->{argv}} ) {
 	      $cmdline .= " $_";
 	  }
 	  &info( $h_jobs->{remote_command} . $cmdline );
-	  
+
 	  ( $error, $job_return, $diagnosis ) = drmaa_run_job( $jt );
 	  die drmaa_strerror( $error ) . "\n" . $diagnosis if( $error );
-	  
+
 	  return $job_return;
 	  last;
       };
 
       /^debug$/i && do {
-	  for( @{$h_jobs->{argv}} ) { 
+	  for( @{$h_jobs->{argv}} ) {
 	      $cmdline .= " $_" ;
 	  }
 	  &info( $h_jobs->{remote_command} . $cmdline );
 
 	  last;
       };
-      &error('Batch system unknown');      
+      &error('Batch system unknown');
   }
 }
 
@@ -649,7 +649,7 @@ no strict;
     my ( $h_jobs );
     my ( $error, $diagnosis, $jt );
     my ( @email, @argv, @env );
-    
+
     $h_jobs = shift;
 #transforme en array une chaine de caractere car DRMAA ne prend que des references de tableau
     $h_jobs->{adminmail} = [$h_jobs->{adminmail}] if( !($h_jobs->{adminmail} =~ m/ARRAY/) );
@@ -658,7 +658,7 @@ no strict;
 #initiation du template pour le job
     ( $error, $jt, $diagnosis ) = drmaa_allocate_job_template();
     die 'Error - drmaa_allocate_job_template - '.drmaa_strerror( $error ) . "\n" . $diagnosis                    if( $error );
-#genere le template du job avec les infos du hash    
+#genere le template du job avec les infos du hash
     ( $error, $diagnosis ) = drmaa_set_attribute( $jt, $DRMAA_REMOTE_COMMAND, $h_jobs->{remote_command} );
     die 'Error - drmaa_set_attribute DRMAA_REMOTE_COMMAND - '.drmaa_strerror( $error ) . "\n" . $diagnosis       if( $error );
     ( $error, $diagnosis ) = drmaa_set_attribute( $jt, $DRMAA_WD, $h_jobs->{index_dir} );
@@ -673,7 +673,7 @@ no strict;
     die 'Error - drmaa_set_attribute DRMAA_OUTPUT_PATH - '.drmaa_strerror( $error ) . "\n" . $diagnosis          if( $error );
      ( $error, $diagnosis ) = drmaa_set_attribute( $jt, $DRMAA_ERROR_PATH, $h_jobs->{host}.$h_jobs->{log_dir} );
     die 'Error - drmaa_set_attribute DRMAA_ERROR_PATH - '.drmaa_strerror( $error ) . "\n" . $diagnosis           if( $error );
-    
+
      ( $error, $diagnosis ) = drmaa_set_vector_attribute( $jt, $DRMAA_V_EMAIL, $h_jobs->{adminmail} );
     die 'Error - drmaa_set_vector_attribute DRMAA_V_EMAIL - '.drmaa_strerror( $error ) . "\n" . $diagnosis       if( $error );
     ( $error, $diagnosis ) = drmaa_set_vector_attribute( $jt, $DRMAA_V_ARGV, $h_jobs->{argv}  );
@@ -701,7 +701,7 @@ sub drmaa_initiation() {
 
     &info('Initiation of DRMAA');
     ( $error, $diagnosis ) = drmaa_init( undef );
-    &warning('Warnning - drmaa_init failed - '.drmaa_strerror( $error ) . "\n" . $diagnosis) if( $error );  
+    &warning('Warnning - drmaa_init failed - '.drmaa_strerror( $error ) . "\n" . $diagnosis) if( $error );
 }
 
 =head3 drmaa_synchronization
@@ -730,7 +730,7 @@ no strict;
     for( @$job_constant ) {
 	( $error, $job_id_out, $stat, $rusage, $diagnosis ) = drmaa_wait( $_, $DRMAA_TIMEOUT_WAIT_FOREVER );
 	die 'Error - drmaa_wait - '. drmaa_strerror( $error ) . "\n" . $diagnosis if( $error );
-	
+
 	( $error, $exit_status, $diagnosis ) = drmaa_wexitstatus( $stat );
 	die 'Error - drmaa_wexitstatus - '.drmaa_strerror( $error ) . "\n" . $diagnosis if( $error );
 	&error("Job $job_id_out returned a non-zero exit code : $exit_status") if( $exit_status );

@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 
@@ -34,13 +34,13 @@ GetOptions (
 	    'outinput=s'         =>\$h_job_args{source_pattern},
 	    'memory|M=i'         =>\$h_job_args{memory},
 	    'threshold|c=f'      =>\$h_job_args{identity_threshold},
-	    
-#standalone qualifiers   
+
+#standalone qualifiers
 	    'indir=s'            =>\$h_job_args{source_dir},
 	    'outdir=s'           =>\$h_job_args{index_dir},
-#biomaj qualifiers   
+#biomaj qualifiers
 	    'biomaj'             =>\$h_job_args{biomaj},
-#optional qualifiers	    
+#optional qualifiers
 	    'execute=s'          =>\$h_job_args{batch_system},
 	    'inname=s'           =>\$h_job_args{source_name},
 	    'outname=s'          =>\$h_job_args{index_name},
@@ -63,14 +63,14 @@ GetOptions (
 	    'AS=i'               =>\$h_job_args{short_alignment_control},
 	    'B'                  =>\$h_job_args{sequence_in_ram},
 	    'p'                  =>\$h_job_args{print_alignment_overlap},
-	    'g'                  =>\$h_job_args{cluster_algorithm}, 
+	    'g'                  =>\$h_job_args{cluster_algorithm},
 	    );
 
 
 #recuperation de la configuration
  INITIATION: {
      &usage() if ($help);
-     
+
      &error('-outinput requiered')  if( &is_null($h_job_args{source_pattern}) );
      &error('-memory|M requiered')    if( &is_null($h_job_args{memory}) );
      &error('-threshold|c requiered') if( &is_null($h_job_args{identity_threshold}) );
@@ -101,9 +101,9 @@ GetOptions (
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
 
-#calcul automatiquement le word_length en fonction du threshold 
+#calcul automatiquement le word_length en fonction du threshold
      &cdhit_word_length();
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern);
  }
 
@@ -126,7 +126,7 @@ GetOptions (
      @t_job_args = ( @t_job_args, '-B', $h_job_args{sequence_in_ram} )             if( $h_job_args{sequence_in_ram} );
      @t_job_args = ( @t_job_args, '-p', $h_job_args{print_alignment_overlap} )     if( $h_job_args{print_alignment_overlap} );
      @t_job_args = ( @t_job_args, '-g', $h_job_args{cluster_algorithm} )           if( $h_job_args{cluster_algorithm} );
-     
+
      $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{cdhit};
  }
 
@@ -196,7 +196,7 @@ Standard qualifiers:
                   Min = 512
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Booleen] 
+  -biomaj         Execution in BioMaJ session. [Booleen]
                   default = 0, standalone
  -inname          Name of the input directory in the databank directory. [string] Optional
                   Only in BioMaJ session
@@ -204,7 +204,7 @@ BioMaJ qualifiers:
   -outname        Name of the output directory in the databank directory. [string] Optional
                   Only in BioMaJ session
                   default = index_name in migale_biomaj.cfg
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path] Requiered in Standalone session
   -indir          Directory of input files. [Directory Path] Requiered in Standalone session
 
@@ -330,7 +330,7 @@ S<build_cdhit.pl --outdir /db/nr/cdhit/ --indir /db/nr/fasta/ --outinput nr=nr.f
 
 =head2 BioMaJ qualifiers
 
-  -biomaj         Execution in BioMaJ session. [Booleen] 
+  -biomaj         Execution in BioMaJ session. [Booleen]
                   default = 0, standalone
 
 =head2 Standalone qualifiers
@@ -486,4 +486,3 @@ under the same terms as Perl itself.
   Return      : positionne la variable $h_job_args{word_length} avec la valeur correspondant a l'identity threshold
 
 =cut
-

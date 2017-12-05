@@ -8,7 +8,7 @@ use Data::Dumper;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 use File::Spec;
@@ -89,7 +89,7 @@ GetOptions (
 #recuperation de la configuration
  INITITATION: {
      &usage() if ($help);
- 
+
      &error('outinput requiered') if( !defined($h_job_args{source_pattern}) || ($h_job_args{source_pattern} eq '') );
  }
 
@@ -119,7 +119,7 @@ GetOptions (
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern);
  }
 
@@ -142,13 +142,13 @@ GetOptions (
      @t_job_args = ( @t_job_args, '-div', $h_job_args{repeat_divergence_threshold} ) if( defined $h_job_args{repeat_divergence_threshold} );
      @t_job_args = ( @t_job_args, '-lib', $h_job_args{custom_lib} )                  if( defined $h_job_args{custom_lib} );
      @t_job_args = ( @t_job_args, '-cutoff', $h_job_args{cutoff_score} )             if( defined $h_job_args{cutoff_score} );
-     
+
      @t_job_args = ( @t_job_args, '-is_only' )   if( defined $h_job_args{clip_ecoli_is} );
      @t_job_args = ( @t_job_args, '-is_clip' )   if( defined $h_job_args{clip_is_before} );
      @t_job_args = ( @t_job_args, '-no_is' )     if( defined $h_job_args{skip_bact_is_check} );
      @t_job_args = ( @t_job_args, '-rodspec' )   if( defined $h_job_args{check_rodent_repeat} );
      @t_job_args = ( @t_job_args, '-primspec' )  if( defined $h_job_args{check_primate_repeat} );
-     
+
      @t_job_args = ( @t_job_args, '-gccalc' )    if( defined $h_job_args{gc_calc} );
      @t_job_args = ( @t_job_args, '-nocut' )     if( defined $h_job_args{cut_stage} );
      @t_job_args = ( @t_job_args, '-noisy' )     if( defined $h_job_args{verbose} );
@@ -157,7 +157,7 @@ GetOptions (
      @t_job_args = ( @t_job_args, '-frag', $h_job_args{fragmentation_threshold} )    if( defined $h_job_args{fragmentation_threshold} );
      @t_job_args = ( @t_job_args, '-maxsize', $h_job_args{clip_threshold} )          if( defined $h_job_args{clip_threshold} );
      @t_job_args = ( @t_job_args, '-gc', $h_job_args{background_gc_level} )          if( defined $h_job_args{background_gc_level} );
-     
+
      @t_job_args = ( @t_job_args, '-alignments' ) if( defined $h_job_args{write_alignment} );
      @t_job_args = ( @t_job_args, '-inv' )        if( defined $h_job_args{oriented_alignment} );
      @t_job_args = ( @t_job_args, '-lcambig' )    if( defined $h_job_args{ambigous_fragment} );
@@ -187,17 +187,17 @@ GetOptions (
 
      while( ($species, $file) = each(%h_files) ) {
 	 &debug('Variable>%h_files : '.$species.' = '.$file) if($debug);
-	 
+
 	 chop $file;
 	 @t_files = split ' ', $file;
 
 	 for( @t_files ) {
-	     
+
 	     @t_task_args = ( @t_job_args, '-species', $species, $_ );
-	     
+
 	     $h_job_args{argv} = \@t_task_args;
 	     $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($_);
-	     
+
 	     push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
 	     &info('');
 	 }
@@ -220,15 +220,15 @@ Standard qualifiers:
                   <species>=<filename>,[<speciesN_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 Optional qualifiers:
   -execute        Execution mode. [local|drmaa|debug]
                   default = in migale_biomaj.cfg
@@ -318,7 +318,7 @@ output options
   -e(xcln)        Calculates repeat densities (in .tbl) excluding runs of >=20 N/Xs in the query
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -363,10 +363,10 @@ Standard qualifiers:
                   <species>=<filename>,[<speciesN_dbnameN=filenameN>]
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
@@ -529,4 +529,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

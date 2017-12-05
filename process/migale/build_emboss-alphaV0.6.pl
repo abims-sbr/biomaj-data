@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 use Date::Format;
@@ -67,7 +67,7 @@ GetOptions (
      my ( @t_old_files );
 
 #mise en place de l'environnement dans une session BioMaJ
-     if( $h_job_args{biomaj} ) {	 
+     if( $h_job_args{biomaj} ) {
 	 &info('Load : BioMaJ Environment.');
 	 &MigaleBiomaj::biomaj_environment( \%h_job_args );
      }
@@ -87,7 +87,7 @@ GetOptions (
 
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern) if( defined $h_job_args{source_pattern} );
 }
 
@@ -99,7 +99,7 @@ REBASE:{
     $h_job_args{argv} = \@t_task_args;
     $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{rebaseextract};
     $h_job_args{job_name} = $h_job_args{index_name}.'.rebase';
-    
+
     push @t_jobid_session, (&MigaleBiomaj::execution_factory(\%h_job_args) );
 
     &MigaleBiomaj::drmaa_synchronization( \@t_jobid_session )                          if( $h_job_args{batch_system} eq 'drmaa' );
@@ -111,14 +111,14 @@ REBASE:{
 #gestion de la banque prosite
  PROSITE:{
      last if( $h_job_args{databank} !~ /prosite/i );
-     
+
      @t_task_args = ( '-prositedir', $h_job_args{source_dir} );
      $h_job_args{argv} = \@t_task_args;
      $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{prosextract};
      $h_job_args{job_name} = $h_job_args{index_name}.'.prosite';
-     
+
      push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
-     
+
      &MigaleBiomaj::drmaa_synchronization( \@t_jobid_session )                          if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::output_file( $h_job_args{index_dir}, \%h_pattern, 'dependence', 1 ) if( $h_job_args{biomaj} == 1 );
      &MigaleBiomaj::print_output_files()                                                if( $h_job_args{biomaj} == 1 );
@@ -128,14 +128,14 @@ REBASE:{
 #gestion de la banque PRINTS
 PRINTS:{
      last if( $h_job_args{databank} !~ /prints/i );
-     
+
      @t_task_args = ( '-infile', $h_job_args{source_dir}.'/prints*.dat' );
      $h_job_args{argv} = \@t_task_args;
      $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{printsextract};
      $h_job_args{job_name} = $h_job_args{index_name}.'.prints';
-     
+
      push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
-     
+
      &MigaleBiomaj::drmaa_synchronization( \@t_jobid_session )                          if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::output_file( $h_job_args{index_dir}, \%h_pattern, 'dependence', 1 ) if( $h_job_args{biomaj} == 1 );
      &MigaleBiomaj::print_output_files()                                                if( $h_job_args{biomaj} == 1 );
@@ -158,7 +158,7 @@ PRINTS:{
      /dbifasta/i && do {
 	 $h_job_args{fields} = 'acc,sv,des' if( &is_null($h_job_args{fields}) );
 	 $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{dbifasta};
-	 last;	 
+	 last;
      };
      /dbxfasta/i && do {
 	 $h_job_args{fields} = 'id,acc,sv,des' if( &is_null($h_job_args{fields}) );
@@ -219,7 +219,7 @@ PRINTS:{
 
 	 $h_job_args{argv} = \@t_task_args;
 	 $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($logical);
-	 
+
 	 push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
 	 &info('');
      }
@@ -250,24 +250,24 @@ Standard qualifiers:
                    <dbname>=<filename>,[<dbnameN=filenameN>]
   --program        Index program. [dbiflat,dbifasta,dbigcg,dbxflat,dbxfasta,dbxgcg]
                    Not requiered for REBASE,PROSITE and PRINTS.
-  --informat       Format of sources files. 
+  --informat       Format of sources files.
                    *flat  : [SWISS*,REFSEQ,GB,EMBL]
 		   *gcg   : [SWISS*,GENBANK,EMBL,PIR]
 		   *fasta : [simple,idacc*,gcgid,gcgidacc,dbid,ncbi]
 		   Not requiered for REBASE and PROSITE.
 
 BioMaJ qualifiers:
-  --biomaj         Execution in BioMaJ session. [Boolean] 
+  --biomaj         Execution in BioMaJ session. [Boolean]
                    default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   --outdir         Directory of output files. [Directory Path]
                    Requiered in standalone mode
   --indir          Directory of input files. [Directory Path]
                    Requiered in standalone mode
   --dbname         Database name. [string]
                    Required in standalone mode
- 
+
 Optional qualifiers:
   --execute        Mode d\'execution du programme. [local|drmaa|debug]
                    default = in migale_biomaj.cfg
@@ -307,7 +307,7 @@ Emboss qualifiers:
                     default = 0
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -375,10 +375,10 @@ Standard qualifiers:
                    Not requiered for REBASE, PROSITE and PRINTS.
 
 BioMaJ qualifiers:
-  --biomaj         Execution in BioMaJ session. [Boolean] 
+  --biomaj         Execution in BioMaJ session. [Boolean]
                    default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   --outdir         Directory of output files. [Directory Path]
                    Requiered in standalone mode
   --indir          Directory of input files. [Directory Path]
@@ -391,7 +391,7 @@ Standalone qualifiers:
 Optional qualifiers:
   --execute        Mode d'execution du programme. [local|drmaa|debug]
                    default = in migale_biomaj.cfg
-  --informat       Format of sources files. 
+  --informat       Format of sources files.
                    *flat  : [SWISS*,REFSEQ,GB,EMBL]
                    *gcg   : [SWISS*,GENBANK,EMBL,PIR]
                    *fasta : [simple,idacc*,gcgid,gcgidacc,dbid,ncbi]
@@ -505,5 +505,3 @@ under the same terms as Perl itself.
     Env          : none
 
 =cut
-
-

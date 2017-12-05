@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 
@@ -33,12 +33,12 @@ GetOptions (
 #standard qualifiers
 	    'p'             =>sub{ $h_job_args{sequence_type} = 'T' },
 	    'outinput=s'    =>\$h_job_args{source_pattern},
-#standalone qualifiers   	    
+#standalone qualifiers
 	    'indir=s'       =>\$h_job_args{source_dir},
 	    'outdir=s'      =>\$h_job_args{index_dir},
-#biomaj qualifiers   
+#biomaj qualifiers
 	    'biomaj'        =>\$h_job_args{biomaj},
-#optional qualifiers	    	    
+#optional qualifiers
 	    'execute=s'     =>\$h_job_args{batch_system},
 	    'inname=s'      =>\$h_job_args{source_name},
 	    'outname=s'     =>\$h_job_args{index_name},
@@ -65,7 +65,7 @@ GetOptions (
 #recuperation de la configuration
  INITITATION: {
      &usage() if ($help);
- 
+
      &error('-outinput requiered')  if( &is_null($h_job_args{source_pattern}) );
      &error('-p requiered')         if( &is_null($h_job_args{sequence_type}) );
  }
@@ -95,7 +95,7 @@ GetOptions (
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory($h_job_args{log_dir});
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash($h_job_args{source_pattern},\%h_pattern);
  }
 
@@ -128,7 +128,7 @@ MAIN: {
 
      while( ($dbname, $file) = each(%h_files) ) {
 	&debug('Variable>%h_pattern : '.$dbname.' = '.$file) if($debug);
-	
+
 	chop $file;
 	$dbname = basename $dbname;
 	@t_task_args = ( @t_job_args, '-t', $dbname, '-n', $dbname, '-i', $file );
@@ -151,12 +151,12 @@ MAIN: {
 sub make_PNal() {
     my ( $sequence_type, $databank_name, $divisions, $time );
     my ( @t_count );
-    
+
     ( $sequence_type, $databank_name, $divisions ) = (shift,shift,shift);
     $time = localtime( time );
-    
+
     if( $sequence_type eq 'T' ) {
-	$sequence_type = 'pal';	
+	$sequence_type = 'pal';
     }
     else {
 	$sequence_type = 'nal';
@@ -196,10 +196,10 @@ Standard qualifiers:
               <dbname>=<filename>,[<dbnameN=filenameN>]
 
 BioMaJ qualifiers:
- -biomaj      Execution in BioMaJ session. [Boolean] 
+ -biomaj      Execution in BioMaJ session. [Boolean]
               default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir     Directory of output files. [Directory Path]
               Requiered in standalone mode
   -indir      Directory of input files. [Directory Path]
@@ -239,7 +239,7 @@ formatdb qualifiers:
           default = F
   -b      ASN.1 database in binary mode [T/F]  Optional
           T - binary,
-          F - text mode.   
+          F - text mode.
           default = F
   -e      Input is a Seq-entry [T/F]  Optional
           default = F
@@ -254,7 +254,7 @@ formatdb qualifiers:
   -B      Binary Gifile produced from the Gifile specified above [File Out]  Optional
   -T      Taxid file to set the taxonomy ids in ASN.1 deflines [File In]  Optional
 EOF
-   
+
     exit -1;
 }
 
@@ -315,10 +315,10 @@ Standard qualifiers:
               <dbname>=<filename>,[<dbnameN=filenameN>]
 
 BioMaJ qualifiers:
- -biomaj      Execution in BioMaJ session. [Boolean] 
+ -biomaj      Execution in BioMaJ session. [Boolean]
               default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir     Directory of output files. [Directory Path]
               Requiered in standalone mode
   -indir      Directory of input files. [Directory Path]
@@ -447,14 +447,12 @@ under the same terms as Perl itself.
     Usage        : make_PNal($sequence_type,$databank_name,$divisions)
     Prerequisite : none
     Fonction     : Creation d'un fichier *.nal ou *.pal
-    Returns      : 
+    Returns      :
        0 : un fichier existe deja ou il n'y en a pas besoin
-    Args         : 
+    Args         :
        $sequence_type : type de sequence, T pour proteique et F pour nucleique (en rapport avec l\'option -p de formatdb).
        $databank_name : nom de la banque regroupant les index. ex : genbank.nal regroupe les index des divisions genbank.
        $divisions : le nom des index separe par un espace. ex : gb_env gb_gss gb_est
     Env          : none
 
 =cut
-
-

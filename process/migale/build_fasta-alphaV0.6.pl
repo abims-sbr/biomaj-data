@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 use File::Temp qw/ tempfile /;
@@ -89,7 +89,7 @@ INITIATION:{
      &MigaleBiomaj::drmaa_initiation() if( $h_job_args{batch_system} eq 'drmaa' );
      &MigaleBiomaj::make_directory( $h_job_args{log_dir} );
 
-#parse la ligne de commande outinput et cree un hash     
+#parse la ligne de commande outinput et cree un hash
      &MigaleBiomaj::string2hash( $h_job_args{source_pattern}, \%h_pattern );
  }
 
@@ -104,7 +104,7 @@ ARGUMENTS:{
 }
 
 
-#Conversion vers ncbi (par defaut)	 
+#Conversion vers ncbi (par defaut)
  CONVERSION:{
      my ( $error, $index_file, $source_file, $file_list, $fh );
      my ( %h_files );
@@ -114,18 +114,18 @@ ARGUMENTS:{
 
      while( ($index_file, $source_file) = each(%h_files) ) {
 	 &debug('Variable>%h_files : '.$index_file.' = '.$source_file) if($debug);
-	
+
 	print "DEBUG : $index_file\n";
- 
+
 	 $index_file = $h_job_args{index_dir} . basename $index_file;
 
 	 @t_file_list = split ' ', $source_file;
 
 	 if( scalar(@t_file_list) > 1) {
 		($fh, $file_list) = tempfile(DIR => $h_job_args{log_dir}, UNLINK => 0);
-	
+
 		print "DEBUG : $file_list\n";
-	
+
 		for(@t_file_list) {
 			print $fh $_."\n";
 	     }
@@ -150,7 +150,7 @@ ARGUMENTS:{
 	     $h_job_args{argv} = \@t_task_args;
 	     $h_job_args{remote_command} = "$h_job_args{binary_path}/$h_job_args{seqret}";
 	     $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($index_file);
-    
+
 	     push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
 	     &info('');
 	 }
@@ -176,15 +176,15 @@ Standard qualifiers:
                   more information in emboss seqret help
 
 BioMaJ qualifiers:
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
-Standalone qualifiers:        
+Standalone qualifiers:
   -outdir         Directory of output files. [Directory Path]
                   Requiered in standalone mode
   -indir          Directory of input files. [Directory Path]
                   Requiered in standalone mode
- 
+
 Optional qualifiers:
   -execute        Type of execution. [local|drmaa|debug]
                   default = in migale_biomaj.cfg
@@ -216,7 +216,7 @@ Seqret qualifiers:
                   default = 0
 
 USAGE
-   
+
     exit -1;
 }
 
@@ -284,7 +284,7 @@ For each file matched by 'NC_*.ffn' the script create a symbolic link to '*.fast
 
 =head2 BioMaJ qualifiers
 
-  -biomaj         Execution in BioMaJ session. [Boolean] 
+  -biomaj         Execution in BioMaJ session. [Boolean]
                   default = 0, standalone
 
 =head2 Standalone qualifiers
@@ -402,4 +402,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-
