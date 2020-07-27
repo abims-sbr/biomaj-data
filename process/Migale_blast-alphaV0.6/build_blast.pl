@@ -7,7 +7,7 @@ use strict;
 use Getopt::Long;
 Getopt::Long::Configure( 'no_ignorecase' );
 
-use lib ("$ENV{BIOMAJ_ROOT}/conf/process");
+use lib ("$ENV{BIOMAJ_ROOT}/process");
 use MigaleBiomaj;
 use File::Basename;
 
@@ -115,7 +115,7 @@ GetOptions (
      @t_job_args = ( @t_job_args, '-B',$h_job_args{binary_gifile} ) if( (defined $h_job_args{binary_gifile}) && ($h_job_args{binary_gifile} ne '') );
      @t_job_args = ( @t_job_args, '-T',$h_job_args{taxid_file} )    if( (defined $h_job_args{taxid_file}) && ($h_job_args{taxid_file} ne '') );
 
-     $h_job_args{remote_command} =  $h_job_args{binary_path}.'/'. $h_job_args{formatdb};
+     $h_job_args{remote_command} =  $h_job_args{binary_path}.$h_job_args{formatdb};
  }
 
 #Indexation

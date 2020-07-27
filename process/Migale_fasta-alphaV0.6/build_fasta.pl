@@ -132,7 +132,7 @@ ARGUMENTS:{
 
 	     @t_task_args = ( @t_job_args, '-outseq', (basename $index_file), '-sequence', "list::$file_list" );
 	     $h_job_args{argv} = \@t_task_args;
-	     $h_job_args{remote_command} = "$h_job_args{binary_path}/$h_job_args{seqret}";
+	     $h_job_args{remote_command} = "$h_job_args{binary_path}$h_job_args{seqret}";
 	     $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($index_file);
 
 	     push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
@@ -148,7 +148,7 @@ ARGUMENTS:{
 	 else {
 	     @t_task_args = ( @t_job_args, '-outseq', (basename $index_file), '-sequence', $source_file );
 	     $h_job_args{argv} = \@t_task_args;
-	     $h_job_args{remote_command} = "$h_job_args{binary_path}/$h_job_args{seqret}";
+	     $h_job_args{remote_command} = "$h_job_args{binary_path}$h_job_args{seqret}";
 	     $h_job_args{job_name} = $h_job_args{index_name}.'.'.basename($index_file);
     
 	     push( @t_jobid_session, &MigaleBiomaj::execution_factory(\%h_job_args) );
